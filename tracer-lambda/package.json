@@ -1,5 +1,10 @@
 {
   "dependencies": {
-    "@aws-lambda-powertools/tracer": "^2.5.0"
+    "@aws-lambda-powertools/tracer": "^2.5.0",
+    "@aws-sdk/client-dynamodb": "^3.637.0",
+    "@aws-sdk/lib-dynamodb": "^3.637.0"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.143"
   }
 }

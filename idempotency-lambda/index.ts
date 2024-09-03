@@ -1,7 +1,7 @@
 import { randomUUID } from 'node:crypto';
 import { makeIdempotent } from '@aws-lambda-powertools/idempotency';
 import { DynamoDBPersistenceLayer } from '@aws-lambda-powertools/idempotency/dynamodb';
-import type { Context } from 'aws-lambda';
+import type { Context, APIGatewayProxyResult } from 'aws-lambda';
 import type { Request, Response, SubscriptionResult } from './types.js';
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 import {
@@ -39,7 +39,7 @@ const createSubscriptionPayment = async (
 
 
 export const handler = makeIdempotent(
-  async (event: Request, _context: Context): Promise<Response> => {
+  async (event: Request, _context: Context): Promise<APIGatewayProxyResult> => {
     try {
       const payment = await createSubscriptionPayment(event);
 

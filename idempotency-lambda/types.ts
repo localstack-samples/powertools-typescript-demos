@@ -1,13 +1,13 @@
 export type Request = {
-    user: string;
-    productId: string;
-  };
+  user: string;
+  productId: string;
+};
   
-  export type Response = {
-    [key: string]: unknown;
-  };
+export type Response = {
+  [key: string]: unknown;
+};
   
-  export type SubscriptionResult = {
-    id: string;
-    productId: string;
-  };
+export type SubscriptionResult = {
+  id: string;
+  productId: string;
+};
