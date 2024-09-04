@@ -10,6 +10,7 @@ import type { ItemResult } from './types.js';
 
 const tracer = new Tracer({ serviceName: 'localstack' });
 const client = new DynamoDBClient({});
+tracer.captureAWSv3Client(client);
 const dynamo = DynamoDBDocumentClient.from(client);
 
 const createItemRecord = async (
