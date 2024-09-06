@@ -11,7 +11,7 @@ export class ParametersCdkStack extends cdk.Stack {
       allowedPattern: '.*',
       description: 'A LocalStack test parameter',
       parameterName: '/localstack/parameter',
-      stringValue: 'You have successfully retrieved a parameter from SSM',
+      stringValue: JSON.stringify({message: 'You have successfully retrieved a parameter from SSM'}),
       tier: ssm.ParameterTier.ADVANCED,
     });
 
