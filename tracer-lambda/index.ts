@@ -9,8 +9,7 @@ import type { APIGatewayProxyResult } from 'aws-lambda';
 import type { ItemResult, Request } from './types.js';
 
 const tracer = new Tracer({ serviceName: 'localstack' });
-const client = new DynamoDBClient({});
-tracer.captureAWSv3Client(client);
+const client = tracer.captureAWSv3Client(new DynamoDBClient({}));
 const dynamo = DynamoDBDocumentClient.from(client);
 
 const createItemRecord = async (
