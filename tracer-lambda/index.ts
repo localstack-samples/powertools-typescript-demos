@@ -6,7 +6,7 @@ import {
   PutCommand,
 } from "@aws-sdk/lib-dynamodb";
 import type { APIGatewayProxyResult } from 'aws-lambda';
-import type { ItemResult } from './types.js';
+import type { ItemResult, Request } from './types.js';
 
 const tracer = new Tracer({ serviceName: 'localstack' });
 const client = new DynamoDBClient({});
@@ -14,10 +14,9 @@ tracer.captureAWSv3Client(client);
 const dynamo = DynamoDBDocumentClient.from(client);
 
 const createItemRecord = async (
-  event: Request
+  name: string
 ): Promise<ItemResult> => {
   const id = randomUUID();
-  const name = "New Product";
   await dynamo.send(
     new PutCommand({
       TableName: process.env.ITEMS_TABLE_NAME,
@@ -34,18 +33,19 @@ const createItemRecord = async (
   };
 };
 
-export const handler = async (event): Promise<APIGatewayProxyResult> => {
+export const handler = async (event: Request): Promise<APIGatewayProxyResult> => {
   const subsegment = tracer.getSegment()?.addNewSubsegment('### new subsegment');
 
   try {
-    const newItem = await createItemRecord(event);
+    let name = event.name || 'new item';
+    const newItem = await createItemRecord(name);
     // Annotate the subsegment with the new object key and then close it
     subsegment?.addAnnotation('newObjectKey', newItem.id);
     subsegment?.close();
 
     const body = {
       message: 'Item created',
-      paymentId: newItem.id,
+      itemId: newItem.id,
     };
 
     return {
@@ -53,6 +53,6 @@ export const handler = async (event): Promise<APIGatewayProxyResult> => {
       body: JSON.stringify(body),
     };
   } catch (error) {
-    throw new Error('Error creating item');
+    throw new Error(error.message);
   }
 };
