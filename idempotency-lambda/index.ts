@@ -2,7 +2,7 @@ import { randomUUID } from 'node:crypto';
 import { makeIdempotent } from '@aws-lambda-powertools/idempotency';
 import { DynamoDBPersistenceLayer } from '@aws-lambda-powertools/idempotency/dynamodb';
 import type { Context, APIGatewayProxyResult } from 'aws-lambda';
-import type { Request, Response, SubscriptionResult } from './types.js';
+import type { Request, SubscriptionResult } from './types.js';
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 import {
   DynamoDBDocumentClient,

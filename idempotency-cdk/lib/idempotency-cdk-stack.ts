@@ -23,7 +23,7 @@ export class IdempotencyStack extends Stack {
       removalPolicy: cdk.RemovalPolicy.DESTROY,
     });
     
-    const fnHandler = new NodejsFunction(this, 'helloWorldFunction', {
+    const idempotencyFunction = new NodejsFunction(this, 'idempotencyFunction', {
       runtime: Runtime.NODEJS_20_X,
       handler: 'handler',
       entry: '../idempotency-lambda/index.ts',
@@ -32,7 +32,11 @@ export class IdempotencyStack extends Stack {
         PAYMENT_TABLE_NAME: paymentTable.tableName,
       },
     });
-    paymentTable.grantReadWriteData(fnHandler);
-    idempotencyTable.grantReadWriteData(fnHandler);
+    paymentTable.grantReadWriteData(idempotencyFunction);
+    idempotencyTable.grantReadWriteData(idempotencyFunction);
+
+    new cdk.CfnOutput(this, 'IdempotencyFunction', {
+      value: idempotencyFunction.functionName,
+    });
   }
 }
