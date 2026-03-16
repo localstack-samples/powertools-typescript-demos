@@ -2,7 +2,7 @@
 
 [Powertools for AWS Lambda](https://docs.powertools.aws.dev/lambda/typescript/latest/) provide implementations of best practices for Lambda function development that are easy to integrate into your existing Lambda functions.
 
-This examples repository provides basic examples of the TypeScript implementation Powertools that can be run and tested in [LocalStack](https://localstack.cloud). The good news is that Powertools (including the logger, metrics, parameters, tracer and idempotency shown here) can be used "out of the box" in LocalStack.
+This examples repository provides basic examples of the TypeScript implementation Powertools that can be run and tested in [LocalStack for AWS](https://localstack.cloud). The good news is that Powertools (including the logger, metrics, parameters, tracer and idempotency shown here) can be used "out of the box" in LocalStack for AWS.
 
 ### Setup, Deployment and Testing the Examples
 
@@ -12,7 +12,7 @@ The easiest way to test these examples is to use the provided Makefile. Start by
 make install
 ```
 
-Ensure that you have LocalStack running on your machine and then run the deploy command for the example you wish to run. For example:
+Ensure that you have LocalStack for AWS running on your machine and then run the deploy command for the example you wish to run. For example:
 
 ```bash
 make deploy-idempotency
@@ -49,4 +49,5 @@ The output will include the names of the deployed functions, which you can test 
 ```bash
 awslocal lambda invoke --function-name TracerStack-tracerFunction output.txt
 ```
+
 Note that the idempotency example does require passing a JSON payload containing a `productId` and `customer` (see the Makefile for an example on how to call this function manually).
