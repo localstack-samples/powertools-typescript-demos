@@ -26,7 +26,7 @@ make invoke-idempotency
 
 ### Manually Setup, Deployment and Testing the Examples
 
-The examples are set up to enable easy deployment and testing of the particular Powertool library you wish to use. Each example has a lambda folder containing the example Lambda and a CDK folder containing the CDK script needed to deploy the example. You will need the AWS CLI, AWS CDK CLI, LocalStack, `awslocal` and `cdklocal` installed.
+The examples are set up to enable easy deployment and testing of the particular Powertool library you wish to use. Each example has a lambda folder containing the example Lambda and a CDK folder containing the CDK script needed to deploy the example. You will need the AWS CLI, AWS CDK CLI, LocalStack, and [`lstk`](https://docs.localstack.cloud/aws/developer-tools/running-localstack/lstk/) installed.
 
 You'll need to run npm install within the directories for the example you wish to run. For instance:
 
@@ -37,17 +37,17 @@ cd ../tracer-cdk
 npm install
 ```
 
-Next, you can bootstrap and deploy using LocalStack's CDK wrapper from within the CDK folder for the example you wish to deploy to LocalStack.
+Next, you can bootstrap and deploy using `lstk`'s CDK wrapper from within the CDK folder for the example you wish to deploy to LocalStack.
 
 ```bash
-cdklocal bootstrap
-cdklocal deploy
+lstk cdk bootstrap
+lstk cdk deploy
 ```
 
-The output will include the names of the deployed functions, which you can test using `awslocal` (replacing `TracerStack-tracerFunction` with the outputted function name):
+The output will include the names of the deployed functions, which you can test using `lstk aws` (replacing `TracerStack-tracerFunction` with the outputted function name):
 
 ```bash
-awslocal lambda invoke --function-name TracerStack-tracerFunction output.txt
+lstk aws lambda invoke --function-name TracerStack-tracerFunction output.txt
 ```
 
 Note that the idempotency example does require passing a JSON payload containing a `productId` and `customer` (see the Makefile for an example on how to call this function manually).
