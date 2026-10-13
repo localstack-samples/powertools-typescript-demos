@@ -2,5 +2,8 @@
   "dependencies": {
     "@aws-lambda-powertools/logger": "^2.5.0",
     "@middy/core": "^5.4.5"
+  },
+  "devDependencies": {
+    "esbuild": "0.28.2"
   }
 }
