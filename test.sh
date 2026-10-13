@@ -51,23 +51,15 @@ test_logger() {
 }
 
 test_metrics() {
-  local fn line found=""
+  local fn line
   fn=$(function_name MetricsCdkStack MetricsFunction)
   invoke "$fn" '{}'
   line=$(echo "$LOGS" | grep '"_aws"' || true)
   [ -n "$line" ] || { echo "$LOGS"; fail "metrics did not write an EMF record"; }
   echo "$line" | jq -e '._aws.CloudWatchMetrics[0].Namespace == "localstackDemo" and .successfulRun == 1 and .service == "demoService"' > /dev/null \
     || fail "EMF record does not hold the successfulRun metric: $line"
+  # LocalStack does not turn EMF log records into CloudWatch metrics, so check the record itself
   echo "PASS: metrics writes the successfulRun metric in EMF"
-
-  for attempt in $(seq 1 15); do
-    found=$(lstk aws cloudwatch list-metrics --namespace localstackDemo --metric-name successfulRun \
-      --query 'length(Metrics)' --output text)
-    [ "$found" != "0" ] && break
-    sleep 2
-  done
-  [ "$found" != "0" ] || fail "metric successfulRun did not reach CloudWatch in namespace localstackDemo"
-  echo "PASS: the successfulRun metric is in CloudWatch"
 }
 
 test_parameters() {

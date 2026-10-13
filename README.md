@@ -34,7 +34,7 @@ make test
 `make test` runs `test.sh`, which invokes each function and checks the result:
 
 - **logger:** the function writes a structured JSON log line with the Lambda context and logs the incoming event.
-- **metrics:** the function writes the `successfulRun` metric in Embedded Metric Format, and the metric shows up in CloudWatch.
+- **metrics:** the function writes the `successfulRun` metric in Embedded Metric Format. LocalStack does not turn EMF log records into CloudWatch metrics, so the test checks the record in the function logs.
 - **parameters:** the function reads the JSON parameter `/localstack/parameter` from SSM and returns it parsed.
 - **tracer:** the function stores an item in DynamoDB through the instrumented client.
 - **idempotency:** a repeated request returns the stored result instead of creating a second payment.
