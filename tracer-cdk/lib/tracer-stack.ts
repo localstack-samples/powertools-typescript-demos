@@ -2,7 +2,7 @@ import * as cdk from 'aws-cdk-lib';
 import { Construct } from 'constructs';
 import { AttributeType, Table } from 'aws-cdk-lib/aws-dynamodb';
 import { NodejsFunction, OutputFormat } from 'aws-cdk-lib/aws-lambda-nodejs';
-import { Tracing } from 'aws-cdk-lib/aws-lambda';
+import { Runtime, Tracing } from 'aws-cdk-lib/aws-lambda';
 export class TracerStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
    super(scope, id, props);
@@ -13,7 +13,10 @@ export class TracerStack extends cdk.Stack {
     });
 
     const tracerFunction = new NodejsFunction(this, 'tracerFunction', {
+      runtime: Runtime.NODEJS_22_X,
       entry: '../tracer-lambda/index.ts',
+      projectRoot: '../tracer-lambda',
+      depsLockFilePath: '../tracer-lambda/package-lock.json',
       handler: 'handler',
       tracing: Tracing.ACTIVE,
       environment: {

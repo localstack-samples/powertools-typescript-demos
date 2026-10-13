@@ -24,9 +24,11 @@ export class IdempotencyStack extends Stack {
     });
     
     const idempotencyFunction = new NodejsFunction(this, 'idempotencyFunction', {
-      runtime: Runtime.NODEJS_20_X,
+      runtime: Runtime.NODEJS_22_X,
       handler: 'handler',
       entry: '../idempotency-lambda/index.ts',
+      projectRoot: '../idempotency-lambda',
+      depsLockFilePath: '../idempotency-lambda/package-lock.json',
       environment: {
         IDEMPOTENCY_TABLE_NAME: idempotencyTable.tableName,
         PAYMENT_TABLE_NAME: paymentTable.tableName,

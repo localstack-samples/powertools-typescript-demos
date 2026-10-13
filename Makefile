@@ -39,6 +39,11 @@ deploy-parameters:         ## Deploy the app to LocalStack
 	    lstk cdk bootstrap && \
 	    lstk cdk deploy --require-approval=never
 
+deploy: deploy-logger deploy-tracer deploy-metrics deploy-parameters deploy-idempotency  ## Deploy all examples to LocalStack
+
+test:           ## Invoke the deployed examples and check the results
+	./test.sh $(EXAMPLES)
+
 invoke:
 	lstk aws lambda invoke --function-name "$(LAMBDA_NAME)" output.txt
 
@@ -54,17 +59,17 @@ invoke-parameters:  ## Invoke the 'parameters' sample Lambda function locally
 	funcName=$$(lstk aws lambda list-functions | jq -r '.Functions[].FunctionName' | grep Parameters) && \
 	    LAMBDA_NAME=$$funcName make invoke
 
-invoke-metrics:  ## Invoke the 'parameters' sample Lambda function locally
+invoke-metrics:  ## Invoke the 'metrics' sample Lambda function locally
 	funcName=$$(lstk aws lambda list-functions | jq -r '.Functions[].FunctionName' | grep Metrics) && \
 	    LAMBDA_NAME=$$funcName make invoke
 
-invoke-idempotency:  ## Invoke the 'parameters' sample Lambda function locally
+invoke-idempotency:  ## Invoke the 'idempotency' sample Lambda function locally
 	funcName=$$(lstk aws lambda list-functions | jq -r '.Functions[].FunctionName' | grep Idempotency) && \
 		LAMBDA_NAME=$$funcName PRODUCT_ID=1 make invoke-idempotency-params && \
 		LAMBDA_NAME=$$funcName PRODUCT_ID=1 make invoke-idempotency-params && \
 		LAMBDA_NAME=$$funcName PRODUCT_ID=2 make invoke-idempotency-params
 
-invoke-idempotency-params:  ## Invoke the 'parameters' sample Lambda function locally
-	lstk aws lambda invoke --function-name "$(LAMBDA_NAME)" --payload '{ "productid": "$(PRODUCT_ID)", "user": "2" }' --cli-binary-format raw-in-base64-out --invocation-type RequestResponse output.txt
+invoke-idempotency-params:  ## Invoke the 'idempotency' sample Lambda function with PRODUCT_ID
+	lstk aws lambda invoke --function-name "$(LAMBDA_NAME)" --payload '{ "productId": "$(PRODUCT_ID)", "user": "2" }' --cli-binary-format raw-in-base64-out --invocation-type RequestResponse output.txt
 
-.PHONY: usage install deploy-logger deploy-tracer deploy-metrics deploy-parameters deploy-idempotency invoke-logger invoke-tracer invoke-metrics invoke-parameters invoke-idempotency invoke invoke-idempotency-params
+.PHONY: usage install deploy test deploy-logger deploy-tracer deploy-metrics deploy-parameters deploy-idempotency invoke-logger invoke-tracer invoke-metrics invoke-parameters invoke-idempotency invoke invoke-idempotency-params

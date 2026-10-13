@@ -1,5 +1,6 @@
 import * as cdk from 'aws-cdk-lib';
 import { Construct } from 'constructs';
+import { Runtime } from 'aws-cdk-lib/aws-lambda';
 import { NodejsFunction } from 'aws-cdk-lib/aws-lambda-nodejs';
 import * as ssm from 'aws-cdk-lib/aws-ssm';
 
@@ -16,12 +17,15 @@ export class ParametersCdkStack extends cdk.Stack {
     });
 
     const parametersFunction = new NodejsFunction(this, 'parametersFunction', {
+      runtime: Runtime.NODEJS_22_X,
       entry: '../parameters-lambda/index.ts',
+      projectRoot: '../parameters-lambda',
+      depsLockFilePath: '../parameters-lambda/package-lock.json',
       handler: 'handler',
     });
     param.grantRead(parametersFunction);
 
-    new cdk.CfnOutput(this, 'MetricsFunction', {
+    new cdk.CfnOutput(this, 'ParametersFunction', {
       value: parametersFunction.functionName,
     });
   }
