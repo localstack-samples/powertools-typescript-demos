@@ -2,5 +2,8 @@
   "dependencies": {
     "@aws-lambda-powertools/metrics": "^2.5.0",
     "@middy/core": "^5.4.5"
+  },
+  "devDependencies": {
+    "esbuild": "0.28.2"
   }
 }

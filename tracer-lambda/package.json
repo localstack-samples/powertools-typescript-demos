@@ -5,6 +5,7 @@
     "@aws-sdk/lib-dynamodb": "^3.637.0"
   },
   "devDependencies": {
-    "@types/aws-lambda": "^8.10.143"
+    "@types/aws-lambda": "^8.10.143",
+    "esbuild": "0.28.2"
   }
 }

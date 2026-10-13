@@ -24,6 +24,23 @@ Once the deployment is finished, invoke the Lambda function. For example:
 make invoke-idempotency
 ```
 
+To deploy every example and check that each one works, run:
+
+```bash
+make deploy
+make test
+```
+
+`make test` runs `test.sh`, which invokes each function and checks the result:
+
+- **logger:** the function writes a structured JSON log line with the Lambda context and logs the incoming event.
+- **metrics:** the function writes the `successfulRun` metric in Embedded Metric Format. LocalStack does not turn EMF log records into CloudWatch metrics, so the test checks the record in the function logs.
+- **parameters:** the function reads the JSON parameter `/localstack/parameter` from SSM and returns it parsed.
+- **tracer:** the function stores an item in DynamoDB through the instrumented client.
+- **idempotency:** a repeated request returns the stored result instead of creating a second payment.
+
+Pass `EXAMPLES` to test a subset, for example `make test EXAMPLES="logger tracer"`.
+
 ### Manually Setup, Deployment and Testing the Examples
 
 The examples are set up to enable easy deployment and testing of the particular Powertool library you wish to use. Each example has a lambda folder containing the example Lambda and a CDK folder containing the CDK script needed to deploy the example. You will need the AWS CLI, AWS CDK CLI, LocalStack, and [`lstk`](https://docs.localstack.cloud/aws/developer-tools/running-localstack/lstk/) installed.
@@ -50,4 +67,4 @@ The output will include the names of the deployed functions, which you can test 
 lstk aws lambda invoke --function-name TracerStack-tracerFunction output.txt
 ```
 
-Note that the idempotency example does require passing a JSON payload containing a `productId` and `customer` (see the Makefile for an example on how to call this function manually).
+Note that the idempotency example does require passing a JSON payload containing a `productId` and `user` (see the Makefile for an example on how to call this function manually).
